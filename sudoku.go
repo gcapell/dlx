@@ -57,7 +57,7 @@ func New(nCols int) *DLX {
 }
 
 // rows define constraints
-func (d *DLX) addRow(nr []int) {
+func (d *DLX) AddRow(nr []int) {
 	if len(nr) == 0 {
 		return
 	}
@@ -78,7 +78,7 @@ func (d *DLX) addRow(nr []int) {
 }
 
 // the dlx algorithm
-func (d *DLX) search() bool {
+func (d *DLX) Search() bool {
 	h := d.h
 	j := h.r.c
 	if j == h {
