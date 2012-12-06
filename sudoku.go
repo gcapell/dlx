@@ -27,17 +27,17 @@ type y struct {
 }
 
 // an object to hold the matrix and solution
-type dlx struct {
+type DLX struct {
 	ch []y  // all column headers
 	h  *y   // ch[0], the root node
 	o  []*x // solution
 }
 
 // constructor creates the column headers but no rows.
-func New(nCols int) *dlx {
+func New(nCols int) *DLX {
 	ch := make([]y, nCols+1)
 	h := &ch[0]
-	d := &dlx{ch, h, nil}
+	d := &DLX{ch, h, nil}
 	h.c = h
 	h.l = &ch[nCols].x
 	ch[nCols].r = &h.x
@@ -57,7 +57,7 @@ func New(nCols int) *dlx {
 }
 
 // rows define constraints
-func (d *dlx) addRow(nr []int) {
+func (d *DLX) addRow(nr []int) {
 	if len(nr) == 0 {
 		return
 	}
@@ -78,7 +78,7 @@ func (d *dlx) addRow(nr []int) {
 }
 
 // the dlx algorithm
-func (d *dlx) search() bool {
+func (d *DLX) search() bool {
 	h := d.h
 	j := h.r.c
 	if j == h {
