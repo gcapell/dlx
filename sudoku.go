@@ -16,7 +16,7 @@ import (
 func solve(u string) string {
 	// construct an dlx object with 324 constraint columns.
 	// other than the number 324, this is not specific to sudoku.
-	d := newDlxObject(324)
+	d := New(324)
 	// now add constraints that define sudoku rules.
 	for r, i := 0, 0; r < 9; r++ {
 		for c := 0; c < 9; c, i = c+1, i+1 {
@@ -63,7 +63,7 @@ type dlx struct {
 }
 
 // constructor creates the column headers but no rows.
-func newDlxObject(nCols int) *dlx {
+func New(nCols int) *dlx {
 	ch := make([]y, nCols+1)
 	h := &ch[0]
 	d := &dlx{ch, h, nil}
@@ -106,7 +106,7 @@ func (d *dlx) addRow(nr []int) {
 	}
 }
 
-// the dlx algorithm 
+// the dlx algorithm
 func (d *dlx) search() bool {
 	h := d.h
 	j := h.r.c
