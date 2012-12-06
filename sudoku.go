@@ -1,7 +1,7 @@
 // Copyright 2012 Sonia Keys
 // License MIT: http://www.opensource.org/licenses/MIT
 
-package main
+package dlx
 
 import (
 	"fmt"
@@ -9,51 +9,6 @@ import (
 	"os"
 	"strings"
 )
-
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Println(`Usage: sudoku <puzzle file>
-    where puzzle file contains one or more puzzles in 81 character format.
-Each puzzle must be on a separate line and must have 81 characters.
-Lines less than 81 characters are ignored.  Any character other than 1-9
-(such as 0, space, or .) can be used to represent a blank square.`)
-		return
-	}
-	b, err := ioutil.ReadFile(os.Args[1])
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	var solved, failed int
-	for _, puzzle := range strings.Split(string(b), "\n") {
-		if len(puzzle) < 81 {
-			continue
-		}
-		puzzle = puzzle[:81] // ignore anything else on line
-		printGrid("\nPuzzle:", puzzle)
-		if s := solve(puzzle); s == "" {
-			fmt.Println("no solution")
-			failed++
-		} else {
-			printGrid("Solved:", s)
-			solved++
-		}
-	}
-	fmt.Println("\nPuzzles solved:", solved)
-	fmt.Println("Failed to solve: ", failed)
-}
-
-// print grid (with title) from 81 character string
-func printGrid(title, s string) {
-	fmt.Println(title)
-	for r, i := 0, 0; r < 9; r, i = r+1, i+9 {
-		fmt.Printf("%c %c %c | %c %c %c | %c %c %c\n", s[i], s[i+1], s[i+2],
-			s[i+3], s[i+4], s[i+5], s[i+6], s[i+7], s[i+8])
-		if r == 2 || r == 5 {
-			fmt.Println("------+-------+------")
-		}
-	}
-}
 
 // solve puzzle in 81 character string format.
 // if solved, result is 81 character string.
@@ -149,16 +104,6 @@ func (d *dlx) addRow(nr []int) {
 		np.u.d, np.d.u, np.l.r, np.r.l = np, np, np, np
 		np.x0 = x0
 	}
-}
-
-// extracts 81 character sudoku string
-func (d *dlx) text() string {
-	b := make([]byte, len(d.o))
-	for _, r := range d.o {
-		x0 := r.x0
-		b[x0.c.n] = byte(x0.r.c.n%9) + '1'
-	}
-	return string(b)
 }
 
 // the dlx algorithm 
