@@ -10,35 +10,6 @@ import (
 	"strings"
 )
 
-// solve puzzle in 81 character string format.
-// if solved, result is 81 character string.
-// if not solved, result is the empty string.
-func solve(u string) string {
-	// construct an dlx object with 324 constraint columns.
-	// other than the number 324, this is not specific to sudoku.
-	d := New(324)
-	// now add constraints that define sudoku rules.
-	for r, i := 0, 0; r < 9; r++ {
-		for c := 0; c < 9; c, i = c+1, i+1 {
-			b := r/3*3 + c/3
-			n := int(u[i] - '1')
-			if n >= 0 && n < 9 {
-				d.addRow([]int{i, 81 + r*9 + n, 162 + c*9 + n,
-					243 + b*9 + n})
-			} else {
-				for n = 0; n < 9; n++ {
-					d.addRow([]int{i, 81 + r*9 + n, 162 + c*9 + n,
-						243 + b*9 + n})
-				}
-			}
-		}
-	}
-	// run dlx.  not sudoku specific.
-	d.search()
-	// extract the sudoku-specific 81 character result from the dlx solution.
-	return d.text()
-}
-
 // Knuth's data object
 type x struct {
 	c          *y
