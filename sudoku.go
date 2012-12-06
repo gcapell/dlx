@@ -1,14 +1,7 @@
 // Copyright 2012 Sonia Keys
 // License MIT: http://www.opensource.org/licenses/MIT
 
-package dlx
-
-import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"strings"
-)
+package main
 
 // Knuth's data object
 type x struct {
@@ -103,7 +96,7 @@ func (d *DLX) Search() bool {
 		for j := r.r; j != r; j = j.r {
 			cover(j.c)
 		}
-		if d.search() {
+		if d.Search() {
 			return true
 		}
 		r = d.o[k]
