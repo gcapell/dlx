@@ -1,7 +1,7 @@
 // Copyright 2012 Sonia Keys
 // License MIT: http://www.opensource.org/licenses/MIT
 
-package main
+package dlx
 
 // Knuth's data object
 type x struct {
