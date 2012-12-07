@@ -5,8 +5,8 @@ package main
 
 // Knuth's data object
 type x struct {
-	c          *y
-	u, d, l, r *x
+	c          *y // header for this column
+	u, d, l, r *x // up/down/left/right
 	// except x0 is not Knuth's.  it's pointer to first constraint in row,
 	// so that the sudoku string can be constructed from the dlx solution.
 	x0 *x
@@ -71,11 +71,11 @@ func (d *DLX) AddRow(nr []int) {
 }
 
 // the dlx algorithm
-func (d *DLX) Search() bool {
+func (d *DLX) Search() [][]int {
 	h := d.h
 	j := h.r.c
 	if j == h {
-		return true
+		return d.solution()
 	}
 	c := j
 	for minS := j.s; ; {
@@ -96,8 +96,8 @@ func (d *DLX) Search() bool {
 		for j := r.r; j != r; j = j.r {
 			cover(j.c)
 		}
-		if d.Search() {
-			return true
+		if reply := d.Search(); reply != nil {
+			return reply
 		}
 		r = d.o[k]
 		c = r.c
@@ -107,7 +107,20 @@ func (d *DLX) Search() bool {
 	}
 	d.o = d.o[:len(d.o)-1]
 	uncover(c)
-	return false
+	return nil
+}
+
+// Return format as slice of rows (as provided to AddRow)
+func (d *DLX) solution() [][]int {
+	reply := make([][]int, len(d.o))
+	for i, r := range d.o {
+		s := []int{r.x0.c.n}
+		for x := r.x0.r; x != r.x0; x = x.r {
+			s = append(s, x.c.n)
+		}
+		reply[i] = s
+	}
+	return reply
 }
 
 func cover(c *y) {

@@ -1,11 +1,11 @@
 package main
+
 import (
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 )
-
 
 func main() {
 	if len(os.Args) != 2 {
@@ -53,11 +53,10 @@ func printGrid(title, s string) {
 }
 
 // extracts 81 character sudoku string
-func (d *DLX) text() string {
-	b := make([]byte, len(d.o))
-	for _, r := range d.o {
-		x0 := r.x0
-		b[x0.c.n] = byte(x0.r.c.n%9) + '1'
+func text(s [][]int) string {
+	b := make([]byte, len(s))
+	for _, r := range s {
+		b[r[0]] = byte(r[1]%9) + '1'
 	}
 	return string(b)
 }
@@ -68,7 +67,7 @@ func (d *DLX) text() string {
 func solve(u string) string {
 	// construct an dlx object with 324 constraint columns.
 	// other than the number 324, this is not specific to sudoku.
-	d :=New(324)
+	d := New(324)
 	// now add constraints that define sudoku rules.
 	for r, i := 0, 0; r < 9; r++ {
 		for c := 0; c < 9; c, i = c+1, i+1 {
@@ -86,8 +85,6 @@ func solve(u string) string {
 		}
 	}
 	// run dlx.  not sudoku specific.
-	d.Search()
 	// extract the sudoku-specific 81 character result from the dlx solution.
-	return d.text()
+	return text(d.Search())
 }
-
